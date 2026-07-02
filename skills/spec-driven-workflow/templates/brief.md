@@ -3,6 +3,7 @@
 **Status:** Draft | Approved
 **Created:** YYYY-MM-DD
 **Hard deadline:** [YYYY-MM-DD + what happens if missed — or "none"]
+**Serves:** [goal from the Goals doc | obligation: <what mandates it> | maintenance: <what it keeps running>]
 
 <!--
 Lite-mode artifact: proposal + spec compressed to one page for everyday

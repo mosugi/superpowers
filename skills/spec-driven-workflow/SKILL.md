@@ -13,10 +13,12 @@ Every change moves through a chain of small artifacts, each answering one questi
 
 | Artifact | Question | Skip when |
 |----------|----------|-----------|
-| Proposal doc | **WHY** are we doing this? | Never — always write it (can be 5 lines) |
-| Spec doc | **WHAT** must be true when we're done? | Never — always write it |
+| Proposal doc | **WHY** are we doing this? | Lite mode — folded into the brief |
+| Spec doc | **WHAT** must be true when we're done? | Lite mode — folded into the brief |
 | Design doc | **HOW** will we approach it? | Simple changes with one obvious approach |
 | Milestones + tasks (Backlog.md) | **In what order**, by whom, verified how? | Never — always create them |
+
+Above every change sits a small stack of **standing documents** — direction (north star, period goals) and constraints (principles) — that changes must trace to. See "The Document Hierarchy" below.
 
 Artifacts are **enablers, not phases**. Real work is not waterfall: you may execute a task, discover the spec was wrong, update the spec, and continue. Dependencies show what is *possible* next, not what is *mandatory* next. What never changes: artifacts stay in sync with reality, and the human gates below are respected.
 
@@ -48,13 +50,42 @@ This applies to EVERY change regardless of perceived simplicity.
 
 "This is too simple to need a spec" is the anti-pattern that causes the most wasted work. For truly simple changes the whole chain can be one page written in ten minutes — but it must exist and be approved.
 
+## The Document Hierarchy
+
+Two kinds of standing documents sit above every change: **direction** (a chain — each level justified by the one above) and **constraints** (a fence — applying to every level). All are optional; create them the first time their absence causes a real misalignment, not preemptively.
+
+```
+DIRECTION (why → what for)                      CONSTRAINTS (how, always)
+──────────────────────────                      ─────────────────────────
+North Star   mission/vision — why this          Principles ("constitution")
+             project/org exists at all            quality bars, budget
+     ↓ justifies                                  ceilings, brand voice,
+Goals: <period>  what matters this                decision authority,
+             quarter/year (OKR-like)              compliance rules
+     ↓ justifies                                       │
+Change       brief / proposal+spec          ←── applies to every layer
+     ↓ decomposes into
+Milestone → child tasks (Backlog.md)
+```
+
+**Rules:**
+
+- **Traceability down the direction chain.** Every brief/proposal names what it serves in its `Serves:` line — a goal, or an explicit `obligation` (statutory filing, contractual duty) or `maintenance` (keeping the lights on). Work that serves nothing is the signal to stop and ask your human partner whether it should exist — before writing the spec, not after execution.
+- **Constraints bind everything.** A change that conflicts with Principles doesn't silently proceed or silently comply — surface the conflict; either the change adapts or the principle is deliberately amended.
+- **Precedence when documents disagree:** North Star > Goals > Principles > change docs > tasks. But you never resolve a disagreement by picking a winner yourself — a contradiction between standing documents is always a question for your human partner.
+- **Standing documents change through the same workflow.** Revising the goals for a new period, or amending a principle, is itself a change: run it through lite mode (brief → approval → update the doc). Never edit a standing document as a side effect of other work. Mission changes are rare and always human-initiated.
+- **When goals change, in-flight work is re-checked.** A goals revision can orphan an active milestone. At the next session start, re-check active milestones' `Serves:` references against the current goals doc and flag any that no longer trace.
+
 ## Where Things Live — Backlog.md
 
 This skill assumes [Backlog.md](https://github.com/MrLesk/Backlog.md) (`backlog` CLI) as the task backend. Everything lives inside the project's `backlog/` folder, browsable via `backlog board` / `backlog browser`. **Always manipulate tasks and docs through the CLI, never by editing the markdown files directly** — that keeps IDs and metadata consistent. If you haven't used Backlog.md in this session, run `backlog instructions overview` first; see also `references/backlog-md.md` for the command mapping used by this skill.
 
 | Skill concept | Backlog.md home | How |
 |---|---|---|
+| North star (mission/vision) | Doc | `backlog doc create "North Star"` |
+| Goals for the period | Doc, one per period | `backlog doc create "Goals: 2026-H2"` |
 | Principles ("constitution") | Doc | `backlog doc create "Principles"` |
+| Living spec (current truth per capability/area) | Doc under `specs/` | `backlog doc create "Spec: <capability>" -p specs` |
 | Brief / proposal / spec / design | Docs, one folder per change | `backlog doc create "Brief: <change>" -p changes/<change-name>` — content follows `templates/*.md` |
 | **Milestone** (deliverable slice) | **Parent task**, label `milestone` | `backlog task create "<slice outcome>" -l milestone --ac "WHEN … THEN …"` |
 | **Fine-grained task** | **Child task** of the milestone | `backlog task create -p <milestone-id> "<task>" --ac "…"` |
@@ -91,9 +122,15 @@ digraph workflow {
 
 **Lite mode path:** Explore (optional) → write the brief doc (steps 2+3 compressed into one page, content per `templates/brief.md`) → Clarify (step 4 applies as-is) → human approves the brief → Decompose into milestone + tasks → Execute with session notes → Verify → Close. Skip a design doc unless a real approach decision appears.
 
-### 0. Principles (once per project, optional)
+### 0. Standing documents (once per project, all optional)
 
-If the project has recurring non-negotiables — quality bars, budget ceilings, brand voice, tech constraints, decision authority — capture them in a `Principles` doc (`backlog doc create "Principles"`). Every later artifact must comply with it; when a proposal conflicts with a principle, surface the conflict instead of silently violating either.
+Set up whichever layers of the Document Hierarchy the project needs:
+
+- **North Star** — why this project/org exists. A few sentences. Rarely touched.
+- **Goals: \<period\>** — what matters this quarter/year, few enough to remember, each with an observable "what better looks like". Revised at period boundaries via lite mode.
+- **Principles** — recurring non-negotiables: quality bars, budget ceilings, brand voice, tech constraints, decision authority. Every later artifact must comply; when a proposal conflicts with a principle, surface the conflict instead of silently violating either.
+
+Don't create these preemptively for a project that doesn't need them — but once they exist, they bind (see The Document Hierarchy rules).
 
 ### 1. Explore (optional)
 
@@ -102,6 +139,8 @@ A no-stakes thinking mode before anything is written. Read the current state (co
 ### 2. Propose — WHY
 
 Create the proposal doc (`backlog doc create "Proposal: <change>" -p changes/<change-name>`, content per `templates/proposal.md`). Keep it to 1–2 pages: the problem or opportunity, what changes at a headline level, which capabilities/areas are affected, impact and risks of doing it (and of not doing it).
+
+Fill the `Serves:` line: which goal this advances, or `obligation`/`maintenance` with a word of justification. If you can't fill it, that IS the finding — raise it with your human partner instead of proceeding.
 
 **Gate:** present the proposal and get explicit approval before specifying.
 
@@ -186,7 +225,7 @@ Work that spans days is executed as a series of sessions, and **Backlog.md is th
 
 **Waiting on external parties:** when a task is sent out for response or approval, label it `waiting` with a follow-up date in its notes, and pull the next unblocked task — a wait is not a stopping point for the whole milestone. If everything is blocked, say so explicitly and schedule the follow-ups rather than idling.
 
-**Re-planning:** plans decay across days. If priorities shifted, a deadline moved, or a wait came back with a surprise, revise the task breakdown (and the brief/spec doc if scope changed) at session start — through the human gate if scope is affected — before executing.
+**Re-planning:** plans decay across days. If priorities shifted, a deadline moved, or a wait came back with a surprise, revise the task breakdown (and the brief/spec doc if scope changed) at session start — through the human gate if scope is affected — before executing. If the Goals doc was revised since a milestone was created, re-check that the brief/proposal behind each active milestone still traces to a current goal (`Serves:` line) and flag any orphaned milestone.
 
 ### 8. Verify
 
@@ -214,6 +253,8 @@ The chain is domain-agnostic. Translate the nouns:
 
 | Artifact | Software | Project mgmt / Ops | Content / Marketing |
 |----------|----------|--------------------|---------------------|
+| North star | Product vision | Org mission / mandate | Brand purpose |
+| Goals | Product roadmap themes, KPIs | Annual/quarterly objectives (OKR) | Growth & audience targets |
 | Principles | Architecture rules, tech stack | Budget authority, compliance, quality bar | Brand voice, style guide |
 | Proposal | Feature proposal | Project charter | Campaign brief |
 | Spec | Requirements + acceptance scenarios | Deliverables + done-criteria per stakeholder | Audience, message, success metrics |
@@ -237,6 +278,8 @@ The chain is domain-agnostic. Translate the nouns:
 | "I'll just edit the task markdown files directly" | Manual edits corrupt IDs and metadata. Go through the `backlog` CLI. |
 | "All the ACs are basically done, I'll check them in one batch" | Each `--check-ac` requires its own fresh evidence. Batch-checking is how unverified work gets marked verified. |
 | "It's a small everyday task, the workflow doesn't apply" | That's what lite mode is for: a one-page brief and a task list still beat improvising across three days. |
+| "This is obviously useful, no need to tie it to a goal" | Orphan work is how weeks disappear. If `Serves:` can't be filled, that's a question for your human partner, not a formality to skip. |
+| "The goals doc is outdated anyway, I'll work around it" | An outdated standing document misleads every future session. Propose the revision (lite mode) instead of quietly ignoring it. |
 
 ## Templates
 

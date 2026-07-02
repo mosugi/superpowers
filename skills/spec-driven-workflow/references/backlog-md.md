@@ -9,6 +9,17 @@ How this workflow's concepts map onto the `backlog` CLI. Run `backlog instructio
 - Multi-line text: repeat `--append-notes "line"` per line, or pass real newlines inside quotes. `\n` is NOT converted. Single-quote any text containing backticks.
 - If no backlog exists yet: `backlog init "<project>"` (add `--no-git` for non-code folders).
 
+## Standing documents (once per project, all optional)
+
+```bash
+backlog doc create "North Star"          # mission/vision — rarely touched
+backlog doc create "Goals: 2026-H2"      # period goals — revised via lite mode at period boundaries
+backlog doc create "Principles"          # constraints binding all work
+backlog doc create "Spec: expense-approval" -p specs   # living spec per capability/area (full mode)
+```
+
+Revising a standing document is itself a change: brief → approval → `backlog doc update`. Never edit one as a side effect of other work.
+
 ## Setup per change
 
 ```bash

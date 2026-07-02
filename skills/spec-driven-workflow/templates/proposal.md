@@ -2,6 +2,10 @@
 
 **Status:** Draft | Approved
 **Created:** YYYY-MM-DD
+**Serves:** [goal from the Goals doc | obligation: <what mandates it> | maintenance: <what it keeps running>]
+
+<!-- If Serves cannot be filled, stop and raise it with your human partner —
+work that traces to nothing is the finding, not a formality to skip. -->
 
 ## Why
 
