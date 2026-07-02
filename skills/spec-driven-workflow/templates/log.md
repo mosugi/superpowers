@@ -1,6 +1,10 @@
 # Log: [Change Name]
 
 <!--
+FALLBACK TEMPLATE — use only when Backlog.md is unavailable. With Backlog.md,
+the milestone task's Implementation Notes are the session journal and the
+`waiting` label replaces the Waiting On table (see references/backlog-md.md).
+
 The artifacts are the only memory between sessions. Write every entry so
 that someone with zero context — tomorrow's you, another agent, your human
 partner — can resume cold. Append entries at the TOP (newest first).

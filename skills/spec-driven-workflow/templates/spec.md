@@ -60,9 +60,9 @@ Write only the changes, under these headers:
 [New `### Requirement:` blocks, full content]
 
 ## MODIFIED Requirements
-[Copy the ENTIRE existing requirement block from `specs/<capability>/spec.md`,
-then edit to the new behavior. Header text must match the original. Partial
-copies lose detail when merged at archive time.]
+[Copy the ENTIRE existing requirement block from the capability's living spec
+doc, then edit to the new behavior. Header text must match the original.
+Partial copies lose detail when merged at archive time.]
 
 ## REMOVED Requirements
 ### Requirement: [Name]

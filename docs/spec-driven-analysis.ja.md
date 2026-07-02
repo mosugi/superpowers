@@ -91,18 +91,43 @@ skills/spec-driven-workflow/
     proposal.md            # WHY(フルモード)
     spec.md                # WHAT(デルタ形式含む、フルモード)
     design.md              # HOW(条件付き)
-    tasks.md               # 実行チェックリスト(期限・待ち状態⏳対応)
-    log.md                 # 作業ジャーナル+Waiting On表(セッションまたぎの唯一の記憶)
+    tasks.md               # フォールバック: Backlog.md 不使用時の実行チェックリスト
+    log.md                 # フォールバック: Backlog.md 不使用時の作業ジャーナル
+  references/
+    backlog-md.md          # Backlog.md CLI とワークフロー概念の対応表・コマンド例
 ```
 
 ### 複数日タスクへの対応(ライトモード)
 
 日常の非開発業務で「複数日かかるタスクを分解して実行する」用途向けに、2モード制を採用:
 
-- **ライトモード**(日常業務のデフォルト): proposal+spec を1枚の `brief.md` に圧縮。承認ゲートは1回。完了基準は WHEN/THEN シナリオのまま維持
-- **セッション再開プロトコル**: セッション開始時に brief / tasks / log を読んで状況を復元し、要約を提示してから着手。終了時は必ず log.md に「やったこと・決定・次の一手(コールドスタート可能な粒度)」を記録
-- **待ち状態管理**: 外部への依頼・承認待ちは ⏳ マーク+Waiting On 表(フォローアップ日付き)で追跡し、待ちの間は次の非ブロックタスクへ進む
+- **ライトモード**(日常業務のデフォルト): proposal+spec を1枚の brief に圧縮。承認ゲートは1回。完了基準は WHEN/THEN シナリオのまま維持
+- **セッション再開プロトコル**: セッション開始時にマイルストーン・タスク・ノートを読んで状況を復元し、要約を提示してから着手。終了時は必ず「やったこと・決定・次の一手(コールドスタート可能な粒度)」を記録
+- **待ち状態管理**: 外部への依頼・承認待ちはフォローアップ日付きで追跡し、待ちの間は次の非ブロックタスクへ進む
 - **タスクの粒度**: 1セッション(半日以内)で完了するサイズに分割。外部待ちを発生させるタスクは最優先で先行実行
+
+### タスク管理バックエンド: Backlog.md
+
+実行状態の管理は [Backlog.md](https://github.com/MrLesk/Backlog.md)(`backlog` CLI)を前提とする。
+規約は「**マイルストーン=親タスク、細かいタスク=子タスク**」:
+
+| スキルの概念 | Backlog.md 上の実体 |
+|---|---|
+| principles / brief / proposal / spec / design | `backlog doc`(変更ごとに `changes/<name>` フォルダ) |
+| マイルストーン(デリバリー単位のスライス) | 親タスク(ラベル `milestone`)。brief の WHEN/THEN 完了基準を AC として持つ |
+| 細分化タスク | `-p <milestone-id>` の子タスク(1セッションで完了するサイズ、AC 必須) |
+| 順序・ブロック | `--dep` |
+| 設計判断 | `backlog decision create` |
+| セッションジャーナル | マイルストーン親タスクの Implementation Notes(`--append-notes`、`NEXT:` 行必須) |
+| 外部待ち | ラベル `waiting` + ノートにフォローアップ日 |
+| 検証 | 証拠を確認してから `--check-ac`(一括チェック禁止) |
+| クローズ | `--final-summary` → `-s Done` → `backlog task archive` / `backlog cleanup` |
+
+ネイティブの `backlog milestone` 機能ではなく親タスクをマイルストーンとする理由:
+親タスクは AC・ステータス・ノート・依存関係を持てるため、検証可能でジャーナルの置き場所にもなる
+(ネイティブ milestone は説明のみ)。ネイティブ milestone は複数変更を横断するリリース束ねに使ってもよいが、本ワークフローの必須要素ではない。
+タスクファイルの直接編集は禁止(ID・メタデータ破損防止)。常に CLI 経由で操作する。
+Backlog.md が使えない環境では `templates/tasks.md` + `templates/log.md` のプレーンファイル運用にフォールバック(ワークフロー自体は同一)。
 
 利用方法: superpowers プラグインとして読み込むか、`skills/spec-driven-workflow/` を
 `~/.claude/skills/` にコピーすれば単体スキルとしても動作する(依存なし・自己完結)。

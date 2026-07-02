@@ -3,6 +3,10 @@
 **Spec:** ./spec.md | **Design:** ./design.md (if present)
 
 <!--
+FALLBACK TEMPLATE — use only when Backlog.md is unavailable. With Backlog.md,
+the milestone parent task + child tasks replace this file entirely
+(see references/backlog-md.md).
+
 RULES
 - Every task is a checkbox `- [ ] X.Y ...` — this file IS the progress tracker.
 - Order by dependency; group by phase, then by priority slice (P1 first).
