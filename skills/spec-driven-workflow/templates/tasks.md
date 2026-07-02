@@ -7,11 +7,17 @@ RULES
 - Every task is a checkbox `- [ ] X.Y ...` — this file IS the progress tracker.
 - Order by dependency; group by phase, then by priority slice (P1 first).
 - [P] = independent of its neighbors; can run in parallel or be delegated.
-- (owner: name) on every delegated task.
+- (owner: name) on every delegated task; (due: YYYY-MM-DD) on anything deadline-bound.
+- ⏳ prefix = sent out, waiting on external party — track it in log.md's
+  Waiting On table with a follow-up date, and pull the next unblocked task.
+- Multi-day work: size every task to finish within one session (≤ half a day);
+  put tasks that trigger external waits as early as possible.
 - Every task ends verifiable: a passing test, an existing artifact, a received
   confirmation. Exact paths, commands, contacts. No "TBD", no "handle
   appropriately", no "similar to task N".
 -->
+
+**Hard deadlines:** [YYYY-MM-DD — what is due; repeat here even if in the brief]
 
 ## 1. Setup / Foundations
 
